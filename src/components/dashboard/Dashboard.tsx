@@ -6,8 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
-import { Wifi, Database, Shield, Activity, LogOut, Users, BarChart3, Thermometer, Droplets, Cloud, Wind, Atom } from "lucide-react";
+import { Wifi, Database, Shield, Activity, LogOut, Users, BarChart3, Thermometer, Droplets, Cloud, Wind, Atom, Leaf } from "lucide-react";
 import { Link } from "react-router-dom";
+import environmentPattern from "@/assets/environment-pattern.jpg";
 
 export function Dashboard() {
   const { latestReading, recentReadings, loading } = useSensorData();
@@ -86,16 +87,27 @@ export function Dashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <div 
+      className="min-h-screen bg-background p-4 md:p-6 relative"
+      style={{
+        backgroundImage: `linear-gradient(rgba(10, 25, 15, 0.95), rgba(10, 25, 15, 0.95)), url(${environmentPattern})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+      }}
+    >
+      <div className="max-w-7xl mx-auto space-y-6 relative z-10">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">
-              🔥 Fire Risk Detection System
-            </h1>
+            <div className="flex items-center gap-3 mb-2">
+              <Leaf className="h-8 w-8 text-primary drop-shadow-[0_0_10px_rgba(74,222,128,0.5)]" />
+              <h1 className="text-3xl font-bold text-foreground">
+                Environmental Fire Risk Detection
+              </h1>
+            </div>
             <p className="text-muted-foreground">
-              Real-time monitoring with AI-powered risk assessment
+              Real-time environmental monitoring with AI-powered risk assessment
             </p>
             <p className="text-sm text-muted-foreground">
               Welcome, {user?.email}

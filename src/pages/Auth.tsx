@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
-import { Shield, User, Mail, Lock } from "lucide-react";
+import { Leaf, User, Mail, Lock } from "lucide-react";
+import environmentHero from "@/assets/environment-hero.jpg";
 
 export default function Auth() {
   const [email, setEmail] = useState("");
@@ -30,19 +31,21 @@ export default function Auth() {
 
   return (
     <div 
-      className="min-h-screen flex items-center justify-center bg-background bg-cover bg-center"
+      className="min-h-screen flex items-center justify-center bg-background bg-cover bg-center relative"
       style={{
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/src/assets/fire-safety-hero.jpg')`
+        backgroundImage: `linear-gradient(rgba(10, 25, 15, 0.85), rgba(10, 25, 15, 0.85)), url(${environmentHero})`
       }}
     >
-      <div className="w-full max-w-md p-6">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10 pointer-events-none" />
+      
+      <div className="w-full max-w-md p-6 relative z-10">
         <div className="text-center mb-8">
-          <Shield className="h-12 w-12 mx-auto mb-4 text-primary" />
-          <h1 className="text-3xl font-bold text-white mb-2">
-            Fire Risk Detection System
+          <Leaf className="h-12 w-12 mx-auto mb-4 text-primary drop-shadow-[0_0_15px_rgba(74,222,128,0.5)]" />
+          <h1 className="text-3xl font-bold text-foreground mb-2 drop-shadow-lg">
+            Environmental Fire Risk Detection
           </h1>
-          <p className="text-gray-300">
-            AI-powered fire safety monitoring
+          <p className="text-muted-foreground drop-shadow-md">
+            AI-powered environmental monitoring & fire safety
           </p>
         </div>
 
