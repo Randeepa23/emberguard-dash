@@ -1,13 +1,29 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { Dashboard } from "@/components/dashboard/Dashboard";
+import { LoginForm } from "@/components/auth/LoginForm";
+import { MockDataProvider } from "@/components/dashboard/MockDataProvider";
+import heroImage from "@/assets/fire-safety-hero.jpg";
 
 const Index = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const handleLogin = (email: string, password: string) => {
+    // Demo login - in production, this would validate against your Supabase auth
+    if (email === "admin@demo.com" && password === "demo123") {
+      setIsLoggedIn(true);
+    } else {
+      alert("Invalid credentials. Use admin@demo.com / demo123 for demo.");
+    }
+  };
+
+  if (!isLoggedIn) {
+    return <LoginForm onLogin={handleLogin} />;
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <MockDataProvider>
+      <Dashboard />
+    </MockDataProvider>
   );
 };
 
