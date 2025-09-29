@@ -14,16 +14,188 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      alerts: {
+        Row: {
+          acknowledged: boolean
+          acknowledged_at: string | null
+          acknowledged_by: string | null
+          alert_type: string
+          created_at: string
+          id: string
+          message: string
+          node_id: string
+          severity: string
+        }
+        Insert: {
+          acknowledged?: boolean
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          alert_type: string
+          created_at?: string
+          id?: string
+          message: string
+          node_id: string
+          severity: string
+        }
+        Update: {
+          acknowledged?: boolean
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          alert_type?: string
+          created_at?: string
+          id?: string
+          message?: string
+          node_id?: string
+          severity?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alerts_node_id_fkey"
+            columns: ["node_id"]
+            isOneToOne: false
+            referencedRelation: "sensor_nodes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          full_name: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      sensor_nodes: {
+        Row: {
+          created_at: string
+          id: string
+          location: string | null
+          name: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          location?: string | null
+          name: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          location?: string | null
+          name?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      sensor_readings: {
+        Row: {
+          co_level: number | null
+          co2_level: number | null
+          confidence_score: number | null
+          fire_risk_prediction: string
+          h2_level: number | null
+          humidity: number | null
+          id: string
+          node_id: string
+          temperature: number | null
+          timestamp: string
+        }
+        Insert: {
+          co_level?: number | null
+          co2_level?: number | null
+          confidence_score?: number | null
+          fire_risk_prediction: string
+          h2_level?: number | null
+          humidity?: number | null
+          id?: string
+          node_id: string
+          temperature?: number | null
+          timestamp?: string
+        }
+        Update: {
+          co_level?: number | null
+          co2_level?: number | null
+          confidence_score?: number | null
+          fire_risk_prediction?: string
+          h2_level?: number | null
+          humidity?: number | null
+          id?: string
+          node_id?: string
+          temperature?: number | null
+          timestamp?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sensor_readings_node_id_fkey"
+            columns: ["node_id"]
+            isOneToOne: false
+            referencedRelation: "sensor_nodes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_role: {
+        Args: { _user_id: string }
+        Returns: Database["public"]["Enums"]["app_role"]
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "operator"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +322,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "operator"],
+    },
   },
 } as const

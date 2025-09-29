@@ -1,13 +1,82 @@
 import { StatusIndicator } from "./StatusIndicator";
 import { SensorCard } from "./SensorCard";
 import { SensorChart } from "./SensorChart";
-import { useDashboardData } from "./MockDataProvider";
+import { useSensorData } from "@/hooks/useSensorData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Wifi, Database, Shield, Activity } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import { Wifi, Database, Shield, Activity, LogOut, Users, BarChart3, Thermometer, Droplets, Cloud, Wind, Atom } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export function Dashboard() {
-  const { riskLevel, sensors, chartData, lastUpdate } = useDashboardData();
+  const { latestReading, recentReadings, loading } = useSensorData();
+  const { signOut, isAdmin, user } = useAuth();
+
+  const riskLevel = latestReading?.fire_risk_prediction || 'safe';
+  const lastUpdate = latestReading ? new Date(latestReading.timestamp) : new Date();
+
+  const sensors = latestReading ? [
+    {
+      id: 'temp',
+      name: 'Temperature',
+      value: latestReading.temperature || 0,
+      unit: '°C',
+      threshold: 40,
+      icon: Thermometer,
+      color: 'text-red-500',
+      trend: 'stable' as const,
+    },
+    {
+      id: 'humidity',
+      name: 'Humidity',
+      value: latestReading.humidity || 0,
+      unit: '%',
+      threshold: 80,
+      icon: Droplets,
+      color: 'text-blue-500',
+      trend: 'stable' as const,
+    },
+    {
+      id: 'co2',
+      name: 'CO₂ Level',
+      value: latestReading.co2_level || 0,
+      unit: 'ppm',
+      threshold: 1000,
+      icon: Cloud,
+      color: 'text-green-500',
+      trend: 'stable' as const,
+    },
+    {
+      id: 'co',
+      name: 'CO Level',
+      value: latestReading.co_level || 0,
+      unit: 'ppm',
+      threshold: 50,
+      icon: Wind,
+      color: 'text-orange-500',
+      trend: 'stable' as const,
+    },
+    {
+      id: 'h2',
+      name: 'H₂ Level',
+      value: latestReading.h2_level || 0,
+      unit: 'ppm',
+      threshold: 40,
+      icon: Atom,
+      color: 'text-purple-500',
+      trend: 'stable' as const,
+    },
+  ] : [];
+
+  const chartData = recentReadings.slice(-20).map(reading => ({
+    time: new Date(reading.timestamp).toLocaleTimeString(),
+    temperature: reading.temperature,
+    humidity: reading.humidity,
+    co2: reading.co2_level,
+    co: reading.co_level,
+    hydrogen: reading.h2_level,
+  }));
 
   const systemStats = [
     { label: "NodeMCU Status", value: "Online", icon: Wifi, status: "safe" },
@@ -28,15 +97,36 @@ export function Dashboard() {
             <p className="text-muted-foreground">
               Real-time monitoring with AI-powered risk assessment
             </p>
+            <p className="text-sm text-muted-foreground">
+              Welcome, {user?.email}
+            </p>
           </div>
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="bg-card">
               <Activity className="h-3 w-3 mr-1" />
-              Live Data
+              {loading ? 'Loading...' : 'Live Data'}
             </Badge>
             <Badge variant="outline" className="bg-card">
               NodeMCU Connected
             </Badge>
+            <Link to="/reports">
+              <Button variant="outline" size="sm">
+                <BarChart3 className="h-4 w-4 mr-2" />
+                Reports
+              </Button>
+            </Link>
+            {isAdmin && (
+              <Link to="/admin">
+                <Button variant="outline" size="sm">
+                  <Users className="h-4 w-4 mr-2" />
+                  Admin
+                </Button>
+              </Link>
+            )}
+            <Button variant="outline" size="sm" onClick={signOut}>
+              <LogOut className="h-4 w-4 mr-2" />
+              Sign Out
+            </Button>
           </div>
         </div>
 
